@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Choose a new hero</title>
+
+  <link rel=" stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+  <link rel=" stylesheet" href="./style.css" />
+</head>
+
+<body>
+
+  <div class="name-picker">
+    <p>Enter the names of those brave enough (or simply nearby) to be called heroes.</p>
+    <textarea placeholder="One name per line"></textarea>
+    <button id="generate-btn">CHOOSE NEW HERO</button>
+  </div>
+
+  <div class="card-container">
+    <div class="card" id="character-card">
+      <!-- FRONT SIDE -->
+      <div class="card-face card-front">
+        <img src="assets/book.png" alt="Story book" class="card-icon" />
+        <h2>THE STORY HAS REACHED AN IMPASS....</h2>
+        <p> A new hero must rise... reluctantly. Or be bribed.</p>
+      </div>
+
+      <!-- BACK SIDE -->
+      <div class="card-face card-back">
+        <button class="close-btn" id="close-btn"><i class="bi bi-x"></i></button>
+        <p id="character-result">A mysterious... (placeholder)</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="./scripts.js"></script>
+</body>
+
+</html>
