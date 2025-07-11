@@ -8,7 +8,7 @@ Upon clicking the **Choose new hero** button, the story unfolds dramatically wit
 + They are {adjective} {type} {quirk}
 
 > _(e.g. a jealous jaffa cake defender who replaces all nouns with the word “banana”)_
-> 
+ 
 + The world will be saved by: {chosenName}, {title}
 
 > _(e.g. Charles, the One with the Good Biscuits)_
