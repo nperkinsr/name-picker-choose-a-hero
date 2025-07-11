@@ -6,8 +6,11 @@ Upon clicking the **Choose new hero** button, the story unfolds dramatically wit
 + A name begins to form...
 + The new hero has been chosen. Their role has been assigned.
 + They are {adjective} {type} {quirk}
+
 > _(e.g. a jealous jaffa cake defender who replaces all nouns with the word “banana”)_
+> 
 + The world will be saved by: {chosenName}, {title}
+
 > _(e.g. Charles, the One with the Good Biscuits)_
 
 The random elements (adjective, type, quirk, and title) are pulled from different arrays in a JSON file, offering an endless mix of weird and hilarious hero descriptions.
