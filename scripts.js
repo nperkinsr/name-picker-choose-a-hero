@@ -1,110 +1,145 @@
 const cardElement = document.getElementById("character-card");
-const generateCharacterButton = document.getElementById("generate-btn");
-const closeCharacterButton = document.getElementById("close-btn");
-const characterTextElement = document.getElementById("character-result");
-const textarea = document.querySelector(".name-picker textarea");
+const generateButton = document.getElementById("generate-btn");
+const closeButton = document.getElementById("close-btn");
+const resultElement = document.getElementById("character-result");
+const namesTextarea = document.querySelector(".name-picker textarea");
 
-let characterData;
+const REVEAL_STEPS = [
+  { delay: 2000, content: "A name begins to form..." },
+  {
+    delay: 3500,
+    content: "The new hero has been chosen. Their role has been assigned.",
+  },
+  {
+    delay: 3500,
+    content: ({ description }) => description,
+  },
+  {
+    delay: 5000,
+    content: ({ name, title }) =>
+      `The world will be saved by: <span class="character-name">${name}</span>, <span class="character-title">${title}</span>`,
+  },
+];
 
-/////////////////////////////////////////////////////
-//////////       DATA LOADING       /////////////
-/////////////////////////////////////////////////////
+let characterData = null;
+let isRevealing = false;
 
-function loadCharacterData() {
-  fetch("characterOptions.json")
-    .then((response) => response.json())
-    .then((data) => {
-      characterData = data;
-    });
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-/////////////////////////////////////////////////////
-//////////       UTILITIES       /////////////
-/////////////////////////////////////////////////////
-
-function getRandomItemFromList(list) {
-  const randomIndex = Math.floor(Math.random() * list.length);
-  return list[randomIndex];
+function getRandomItem(list) {
+  return list[Math.floor(Math.random() * list.length)];
 }
 
-function getRandomNameFromTextarea() {
-  const names = textarea.value
+function toTitleCase(value) {
+  return value
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+function getEnteredNames() {
+  return namesTextarea.value
     .split("\n")
-    .map((name) => name.trim())
-    .filter((name) => name.length > 0);
-  if (names.length === 0) return null;
-  return getRandomItemFromList(names);
+    .map((name) => toTitleCase(name.trim()))
+    .filter(Boolean);
 }
 
-// Adds a line of text with fade-in animation
-function appendFadeInLine(htmlContent) {
+function appendFadeInLine(html) {
   const line = document.createElement("div");
   line.className = "fade-in-line";
-  line.innerHTML = htmlContent;
-  characterTextElement.appendChild(line);
-
-  // Trigger reflow so the animation re-applies even on repeated elements
-  void line.offsetWidth;
+  line.innerHTML = html;
+  resultElement.appendChild(line);
 }
 
 function clearCharacterResult() {
-  characterTextElement.innerHTML = "";
+  resultElement.textContent = "";
 }
 
-function createRandomCharacterDescription() {
-  const adjective = getRandomItemFromList(characterData.adjectives);
-  const type = getRandomItemFromList(characterData.types);
-  const quirk = getRandomItemFromList(characterData.quirks);
+function buildCharacterDescription() {
+  const adjective = getRandomItem(characterData.adjectives);
+  const type = getRandomItem(characterData.types);
+  const quirk = getRandomItem(characterData.quirks);
+
   return `They are <span class="character">${adjective} ${type} ${quirk}</span>.`;
 }
 
-function getRandomTitle() {
-  return getRandomItemFromList(characterData.titles);
+function buildCharacterState(name) {
+  return {
+    name,
+    title: getRandomItem(characterData.titles),
+    description: buildCharacterDescription(),
+  };
 }
 
-/////////////////////////////////////////////////////
-//////////       CHARACTER DISPLAY       /////////////
-/////////////////////////////////////////////////////
+function showValidationError() {
+  resultElement.innerHTML =
+    "<span style='color:red;'>Please enter at least one name into the text field.</span>";
+}
+
+async function revealCharacter(state) {
+  for (const step of REVEAL_STEPS) {
+    if (step.delay > 0) {
+      await delay(step.delay);
+    }
+
+    const content =
+      typeof step.content === "function" ? step.content(state) : step.content;
+
+    appendFadeInLine(content);
+  }
+}
 
 async function showCharacterOnCardBack() {
-  clearCharacterResult();
-  cardElement.classList.add("flipped");
-
-  const chosenName = getRandomNameFromTextarea();
-
-  if (!chosenName) {
-    characterTextElement.innerHTML =
-      "<span style='color:red;'>Please enter at least one name into the text field.</span>";
+  if (isRevealing) {
     return;
   }
 
-  appendFadeInLine("A name begins to form…");
+  isRevealing = true;
+  generateButton.disabled = true;
+  clearCharacterResult();
+  cardElement.classList.add("flipped");
 
-  await new Promise((res) => setTimeout(res, 2000));
-  appendFadeInLine(
-    "The new hero has been chosen. Their role has been assigned."
-  );
+  try {
+    if (!characterData) {
+      resultElement.innerHTML =
+        "<span style='color:red;'>Character options failed to load.</span>";
+      return;
+    }
 
-  await new Promise((res) => setTimeout(res, 3500));
-  const description = createRandomCharacterDescription();
-  appendFadeInLine(description);
+    const names = getEnteredNames();
 
-  await new Promise((res) => setTimeout(res, 4500));
-  const title = getRandomTitle();
-  appendFadeInLine(
-    `The world will be saved by: <span class="character-name">${chosenName}</span>, <span class="character-title">${title}</span>`
-  );
+    if (names.length === 0) {
+      showValidationError();
+      return;
+    }
+
+    const selectedName = getRandomItem(names);
+    const characterState = buildCharacterState(selectedName);
+
+    await revealCharacter(characterState);
+  } finally {
+    isRevealing = false;
+    generateButton.disabled = false;
+  }
 }
 
 function showCardFront() {
   cardElement.classList.remove("flipped");
 }
 
-/////////////////////////////////////////////////////
-//////////       EVENT LISTENERS       /////////////
-/////////////////////////////////////////////////////
+async function loadCharacterData() {
+  const response = await fetch("characterOptions.json");
+  characterData = await response.json();
+}
 
-generateCharacterButton.addEventListener("click", showCharacterOnCardBack);
-closeCharacterButton.addEventListener("click", showCardFront);
+generateButton.addEventListener("click", showCharacterOnCardBack);
+closeButton.addEventListener("click", showCardFront);
 
-loadCharacterData();
+loadCharacterData().catch(() => {
+  resultElement.innerHTML =
+    "<span style='color:red;'>Character options failed to load.</span>";
+});

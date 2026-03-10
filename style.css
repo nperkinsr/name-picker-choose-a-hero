@@ -2,11 +2,8 @@
    Root Variables & Resets
    ========================= */
 :root {
-  --black: #000000;
   --white: #ffffff;
-  --color1: #ea5f58;
-  --color2: rgb(255, 216, 214);
-  --color3: rgb(234, 228, 220);
+  --ui-scale: 1.2;
 }
 
 * {
@@ -15,38 +12,48 @@
 
 h2 {
   color: #f3766b;
+  font-size: 1.5rem;
+  margin-bottom: 0;
+}
+
+p {
+  font-size: calc(0.8rem * var(--ui-scale));
+  line-height: 1.5;
+  font-size: 1rem;
 }
 
 /* GENERAL RESET */
 body {
   margin: 0;
-  padding: 0;
+  padding: 2rem;
   font-family: "Quicksand", sans-serif;
   background: #f9f5ef;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  gap: 1.5rem;
 }
 
 .name-picker {
-  font-size: 0.9rem;
+  font-size: calc(0.9rem * var(--ui-scale));
   display: flex;
   flex-direction: column;
   background-color: var(--white);
-  margin-right: 1rem;
-  border-radius: 12px;
-  width: 245px;
-  padding: 20px;
+  border-radius: 18px;
+  width: calc(245px * var(--ui-scale));
+  padding: calc(20px * var(--ui-scale));
   text-align: center;
 }
 
 .name-picker > textarea {
-  height: 220px;
+  min-height: calc(220px * var(--ui-scale));
   text-align: center;
-  padding: 1rem 0;
-  line-height: 1.8;
+  padding: 1.5rem 1rem;
   border: 1px solid rgb(230, 230, 230);
+  border-radius: 12px;
+  font: inherit;
+  line-height: 1.8;
 }
 
 textarea::placeholder {
@@ -69,8 +76,8 @@ textarea:focus {
 }
 
 .card {
-  width: 500px;
-  height: 400px;
+  width: calc(500px * var(--ui-scale));
+  height: calc(420px * var(--ui-scale));
   position: relative;
   transform-style: preserve-3d; /* To see both sides flipping realistically, the card container needs this; so the front and back don’t get flattened and disappear or look weird. */
   transition: transform 0.8s ease-in-out;
@@ -87,10 +94,10 @@ textarea:focus {
   width: 100%;
   height: 100%;
   background: white;
-  border-radius: 12px;
+  border-radius: 18px;
   box-shadow: 3px 5px 2px rgba(0, 0, 0, 0.1);
   backface-visibility: hidden;
-  padding: 2rem 1.5rem;
+  padding: 3rem 2.25rem;
   box-sizing: border-box;
   text-align: center;
   display: flex;
@@ -104,17 +111,25 @@ textarea:focus {
   z-index: 2;
 }
 
+.card-front > p {
+  font-size: 1.2rem;
+}
+
 /* BACK FACE */
 .card-back {
   transform: rotateY(180deg);
-  font-size: 1.3rem;
-  padding: 0 2rem;
+  font-size: 2rem;
+  padding: 0 3rem;
+}
+
+.card-back > p {
+  font-size: 1.5rem;
 }
 
 /* IMAGE STYLING */
 .card-icon {
-  width: 90px;
-  margin-bottom: 1rem;
+  width: 140px;
+  margin-bottom: 2rem;
 }
 
 /* BUTTON STYLING */
@@ -122,12 +137,12 @@ button {
   background: #f3766b;
   color: white;
   border: none;
-  padding: 1rem 2rem;
-  font-size: 0.8rem;
+  padding: 1.5rem 3rem;
+  font-size: calc(0.8rem * var(--ui-scale));
   font-weight: 500;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   transition: all 0.3s ease-in-out;
 }
 
@@ -135,13 +150,18 @@ button:hover {
   background: #bb5147;
 }
 
+button:disabled {
+  cursor: wait;
+  opacity: 0.75;
+}
+
 /* CLOSE BUTTON (X) */
 .close-btn {
   position: absolute;
-  top: 0px;
-  right: 14px;
+  top: 0.5rem;
+  right: 1.25rem;
   background: transparent;
-  font-size: 2rem;
+  font-size: 3rem;
   padding: 0;
   color: #444;
 }
@@ -163,12 +183,42 @@ button:hover {
 
 .fade-in-line {
   opacity: 0;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   animation: fadeIn 2s forwards;
 }
 
 @keyframes fadeIn {
   to {
     opacity: 1;
+  }
+}
+
+@media (max-width: 1280px) {
+  body {
+    flex-direction: column;
+  }
+
+  .name-picker,
+  .card {
+    width: min(100%, calc(500px * var(--ui-scale)));
+  }
+}
+
+@media (max-width: 900px) {
+  :root {
+    --ui-scale: 1;
+  }
+
+  body {
+    padding: 1rem;
+  }
+
+  .name-picker,
+  .card {
+    width: 100%;
+  }
+
+  .card {
+    height: 400px;
   }
 }
