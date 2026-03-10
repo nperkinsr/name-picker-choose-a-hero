@@ -3,7 +3,6 @@
    ========================= */
 :root {
   --white: #ffffff;
-  --ui-scale: 1.2;
 }
 
 * {
@@ -17,7 +16,7 @@ h2 {
 }
 
 p {
-  font-size: calc(0.8rem * var(--ui-scale));
+  font-size:0.8rem;
   line-height: 1.5;
   font-size: 1rem;
 }
@@ -36,18 +35,19 @@ body {
 }
 
 .name-picker {
-  font-size: calc(0.9rem * var(--ui-scale));
+  font-size: 0.9rem;
   display: flex;
   flex-direction: column;
   background-color: var(--white);
   border-radius: 18px;
-  width: calc(245px * var(--ui-scale));
-  padding: calc(20px * var(--ui-scale));
+  width: 245px;
+  padding: 20px;
   text-align: center;
+    box-shadow: 3px 5px 2px rgba(0, 0, 0, 0.1);
 }
 
 .name-picker > textarea {
-  min-height: calc(220px * var(--ui-scale));
+  min-height: 260px;
   text-align: center;
   padding: 1.5rem 1rem;
   border: 1px solid rgb(230, 230, 230);
@@ -76,8 +76,8 @@ textarea:focus {
 }
 
 .card {
-  width: calc(500px * var(--ui-scale));
-  height: calc(420px * var(--ui-scale));
+  width: 560px;
+  height: 495px;
   position: relative;
   transform-style: preserve-3d; /* To see both sides flipping realistically, the card container needs this; so the front and back don’t get flattened and disappear or look weird. */
   transition: transform 0.8s ease-in-out;
@@ -137,12 +137,12 @@ button {
   background: #f3766b;
   color: white;
   border: none;
-  padding: 1.5rem 3rem;
-  font-size: calc(0.8rem * var(--ui-scale));
+  padding: 1.2rem 1rem;
+  font-size: 0.8rem;
   font-weight: 500;
   border-radius: 12px;
   cursor: pointer;
-  margin-top: 2rem;
+  margin-top: 1rem;
   transition: all 0.3s ease-in-out;
 }
 
@@ -200,7 +200,7 @@ button:disabled {
 
   .name-picker,
   .card {
-    width: min(100%, calc(500px * var(--ui-scale)));
+    width: min(100%, 500px;
   }
 }
 
